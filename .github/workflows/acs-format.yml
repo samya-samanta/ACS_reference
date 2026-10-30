@@ -1,0 +1,23 @@
+name: Format ACS references
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Number of references to format (10 for demo, 0 for all)'
+        required: true
+        default: '10'
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Format Word bibliography
+        run: python format_acs.py REFERENCES.docx --output ACS_formatted.docx --limit "${{ inputs.limit }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: acs-formatted-references
+          path: ACS_formatted.docx
